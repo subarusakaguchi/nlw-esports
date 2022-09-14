@@ -1,4 +1,5 @@
 import { container } from "tsyringe";
+import "./Providers";
 
 import { IAdsRepository } from "../../../modules/ads/repositories/interfaces/IAdsRepository";
 import { SqliteAdsRepository } from "../../../modules/ads/repositories/SqliteAdsRepository";
