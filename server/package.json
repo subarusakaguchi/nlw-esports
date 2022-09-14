@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --exit-child --poll --inspect --transpile-only --ignore-watch nodes_modules --respawn src/shared/infra/http/server.ts",
-    "seed:games": "ts-node-dev src/shared/infra/prisma/sqlite/gameSeed.ts"
+    "seed:games": "ts-node-dev src/shared/infra/prisma/sqlite/gameSeed.ts",
+    "schema2": "npx prisma generate --schema ./prisma-MongoDB/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^4.3.1",
