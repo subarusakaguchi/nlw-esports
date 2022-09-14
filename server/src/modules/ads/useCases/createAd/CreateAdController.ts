@@ -6,7 +6,6 @@ import { CreateAdUseCase } from "./CreateAdUseCase";
 class CreateAdController {
   async handle(req: Request, res: Response): Promise<Response> {
     const {
-      gameId,
       name,
       yearsPlaying,
       discord,
@@ -15,6 +14,8 @@ class CreateAdController {
       hourEnd,
       useVoiceChannel,
     } = req.body;
+
+    const { id: gameId } = req.params;
 
     const createAdUseCase = container.resolve(CreateAdUseCase);
 

@@ -7,9 +7,23 @@ import {
 
 @injectable()
 class CreateAdUseCase {
-  constructor(@inject("AdsRepository") private adsRepository: IAdsRepository) {}
+  constructor(
+    @inject("SqliteAdsRepository") private adsRepository: IAdsRepository
+  ) {}
 
   async execute(data: ICreateAdsDTO) {
+    const adExists = await this.adsRepository.findByDiscord(data.discord);
+
+    if (adExists[0]) {
+      const discordAdMatch = adExists.filter((ad) => {
+        return ad.gameId === data.gameId;
+      });
+
+      if (discordAdMatch) {
+        throw new Error("Discord id already has an ad for this game");
+      }
+    }
+
     const newAd = await this.adsRepository.create(data);
 
     return newAd;

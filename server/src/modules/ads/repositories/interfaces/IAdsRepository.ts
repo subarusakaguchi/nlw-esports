@@ -1,3 +1,5 @@
+import { Ad } from "@prisma/client";
+
 interface ICreateAdsDTO {
   gameId: string;
   name: string;
@@ -10,7 +12,9 @@ interface ICreateAdsDTO {
 }
 
 interface IAdsRepository {
-  create(data: ICreateAdsDTO): any;
+  create(data: ICreateAdsDTO): Promise<Ad>;
+  findByDiscord(discord: string): Promise<Ad[]>;
+  findDiscordByAdId(adId: string): Promise<{ discord: string } | null>;
 }
 
 export { IAdsRepository, ICreateAdsDTO };
