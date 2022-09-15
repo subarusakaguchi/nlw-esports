@@ -25,8 +25,6 @@ function App () {
       .then(async res => await res.json())
       .then(data => setGames(data))
       .catch(err => console.log(err))
-
-    console.log(games)
   }, [])
 
   return (
