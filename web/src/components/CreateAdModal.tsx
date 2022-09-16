@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-base-to-string */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import * as Dialog from '@radix-ui/react-dialog'
 import * as Select from '@radix-ui/react-select'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
@@ -5,8 +8,52 @@ import { GameController } from 'phosphor-react'
 import { Input } from './Form/Input'
 import { StyledCheckbox } from './Form/StyledCheckbox'
 import { StyledSelect } from './Form/StyledSelect'
+import { StyledToggleGroup } from './Form/StyledToggleGroup'
+import { FormEvent, useState } from 'react'
+import axios from 'axios'
 
 export function CreateAdModal () {
+  const [weekDays, setWeekDays] = useState<string[]>([])
+  const [useVoiceChannel, setUseVoiceChannel] = useState<boolean>(false)
+
+  async function handleCreateAd (event: FormEvent) {
+    event.preventDefault()
+
+    const target = event.target as HTMLFormElement
+
+    const formData = new FormData(target)
+
+    const data = Object.fromEntries(formData)
+
+    console.log(data)
+
+    try {
+      console.log({
+        discord: data.discord,
+        hourStart: data.hourStart,
+        hourEnd: data.hourEnd,
+        name: data.name,
+        weekDays,
+        yearsPlaying: Number(data.yearsPlaying),
+        useVoiceChannel
+      })
+
+      await axios.post(`http://localhost:8888/ads/${data.game}`, {
+        discord: data.discord,
+        hourStart: data.hourStart,
+        hourEnd: data.hourEnd,
+        name: data.name,
+        weekDays,
+        yearsPlaying: Number(data.yearsPlaying),
+        useVoiceChannel
+      })
+
+      alert('Anúncio criado com sucesso!')
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <Dialog.Portal>
       <Dialog.Overlay className='bg-black/60 inset-0 fixed'/>
@@ -15,10 +62,10 @@ export function CreateAdModal () {
           Publique um anúncio
         </Dialog.Title>
 
-        <form className='mt-8 flex flex-col gap-4'>
+        <form onSubmit={handleCreateAd} className='mt-8 flex flex-col gap-4'>
           <div className='flex flex-col'>
             <label htmlFor="game" className='font-semibold'>Qual o game?</label>
-            <Select.Root>
+            <Select.Root name='game'>
               <Select.Trigger
                 className='flex justify-between bg-zinc-900 py-3 px-4 rounded text-sm text-zinc-500'
               >
@@ -34,18 +81,18 @@ export function CreateAdModal () {
 
           <div className='flex flex-col'>
             <label htmlFor="name">Seu nome (ou nickname)</label>
-            <Input id="name" type="text" placeholder='Como te chamam dentro do game?' />
+            <Input name="name" id="name" type="text" placeholder='Como te chamam dentro do game?' />
           </div>
 
           <div className='grid grid-cols-2 gap-6'>
             <div className='flex flex-col gap-2'>
               <label htmlFor="yearsPlaying">Joga há quantos anos?</label>
-              <Input id="yearsPlaying" type="number" placeholder='Tudo bem ser ZERO' />
+              <Input name="yearsPlaying" id="yearsPlaying" type="number" placeholder='Tudo bem ser ZERO' />
             </div>
 
             <div className='flex flex-col gap-2'>
               <label htmlFor="discord">Qual o seu discord?</label>
-              <Input id="discord" type="text" placeholder='Usuário#0000' />
+              <Input name='discord' id="discord" type="text" placeholder='Usuário#0000' />
             </div>
           </div>
 
@@ -53,62 +100,19 @@ export function CreateAdModal () {
             <div className='flex flex-col gap-2'>
               <label htmlFor="weekDays">Quando costuma jogar?</label>
 
-              <div className='grid grid-cols-4 gap-2'>
-                <button
-                  title='Domingo'
-                  className='w-8 h-8 rounded bg-zinc-900 '
-                >
-                    D
-                </button>
-                <button
-                  title='Segunda'
-                  className='w-8 h-8 rounded bg-zinc-900 '
-                >
-                    S
-                </button>
-                <button
-                  title='Terça'
-                  className='w-8 h-8 rounded bg-zinc-900 '
-                >
-                    T
-                </button>
-                <button
-                  title='Quarta'
-                  className='w-8 h-8 rounded bg-zinc-900 '
-                >
-                    Q
-                </button>
-                <button
-                  title='Quinta'
-                  className='w-8 h-8 rounded bg-zinc-900 '
-                >
-                    Q
-                </button>
-                <button
-                  title='Sexta'
-                  className='w-8 h-8 rounded bg-zinc-900 '
-                >
-                    S
-                </button>
-                <button
-                  title='Sábado'
-                  className='w-8 h-8 rounded bg-zinc-900 '
-                >
-                    S
-                </button>
-              </div>
+              <StyledToggleGroup weekDays={weekDays} setWeekDays={setWeekDays} />
             </div>
 
             <div className='flex flex-col gap-2 flex-1'>
               <label htmlFor="hourStart">Qual o horário do dia?</label>
               <div className='grid grid-cols-2 gap-2'>
-                <Input id="hourStart" type="time" placeholder='De' />
-                <Input id="hourEnd" type="time" placeholder='Até' />
+                <Input name='hourStart' id="hourStart" type="time" placeholder='De' />
+                <Input name='hourEnd' id="hourEnd" type="time" placeholder='Até' />
               </div>
             </div>
           </div>
 
-          <StyledCheckbox />
+          <StyledCheckbox useVoiceChannel={useVoiceChannel} setUseVoiceChannel={setUseVoiceChannel} />
 
           <footer className='mt-4 flex justify-end gap-4'>
             <Dialog.Close

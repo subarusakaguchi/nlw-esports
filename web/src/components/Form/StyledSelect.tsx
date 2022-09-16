@@ -2,15 +2,15 @@ import * as Select from '@radix-ui/react-select'
 import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons'
 import { useEffect, useState } from 'react'
 import { Game } from '../../App'
+import axios from 'axios'
 
 export function StyledSelect () {
   const [games, setGames] = useState<Game[] | []>([])
 
   useEffect(() => {
-    fetch('http://localhost:8888/games/all')
-      .then(async res => await res.json())
-      .then(data => {
-        setGames(data)
+    axios('http://localhost:8888/games/all')
+      .then(response => {
+        setGames(response.data)
       })
       .catch(err => console.log(err))
   }, [])
