@@ -18,6 +18,7 @@ export interface Game {
 }
 
 function App () {
+  const [open, setOpen] = useState<boolean>(false)
   const [games, setGames] = useState<Game[] | []>([])
 
   useEffect(() => {
@@ -32,9 +33,9 @@ function App () {
     <div className='max-w-[1344px] mx-auto flex flex-col items-center my-20'>
       <img src={logoImg} />
 
-      <h1 className='text-6xl text-white font-black mt-20'>Seu <span className='bg-nlw-gradient bg-clip-text text-transparent'>duo</span> está aqui.</h1>
+      <h1 className='lg:text-6xl text-4xl text-white font-black lg:mt-20 mt-10'>Seu <span className='bg-nlw-gradient bg-clip-text text-transparent'>duo</span> está aqui.</h1>
 
-      <div className='grid grid-cols-6 gap-6 mt-16'>
+      <div className='lg:grid lg:grid-cols-6 flex flex-col lg:gap-6 gap-4 lg:mt-16 mt-10'>
         {games.map(game => {
           return (
             <GameBanner
@@ -45,13 +46,12 @@ function App () {
             />
           )
         })}
-
       </div>
 
-      <Dialog.Root>
+      <Dialog.Root open={open} onOpenChange={setOpen}>
         <CreateAdBanner />
 
-        <CreateAdModal />
+        <CreateAdModal setOpen={setOpen} />
       </Dialog.Root>
     </div>
   )

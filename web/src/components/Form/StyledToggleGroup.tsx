@@ -9,7 +9,7 @@ export function StyledToggleGroup ({ weekDays, setWeekDays }: StyledToggleGroupP
   return (
     <ToggleGroup.Root
       type='multiple'
-      className='grid grid-cols-4 gap-2'
+      className='grid lg:grid-cols-4 grid-cols-7 lg:gap-2'
       onValueChange={setWeekDays}
       value={weekDays}
     >
